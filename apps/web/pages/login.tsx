@@ -3,7 +3,14 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { supabase } from '../lib/initSupabase';
 
-const fetcher = (url, token) =>
+type ViewType =
+  | 'sign_in'
+  | 'sign_up'
+  | 'forgotten_password'
+  | 'magic_link'
+  | 'update_password';
+
+const fetcher = (url: string, token: string) =>
   fetch(url, {
     method: 'GET',
     headers: new Headers({ 'Content-Type': 'application/json', token }),
@@ -17,7 +24,7 @@ const Login = () => {
     fetcher
   );
 
-  const [authView, setAuthView] = useState('sign_in');
+  const [authView, setAuthView] = useState<ViewType>('sign_in');
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
