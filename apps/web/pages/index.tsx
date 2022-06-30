@@ -13,7 +13,7 @@ const list = [
   },
   {
     title: 'Sign Up',
-    href: '/signUp',
+    href: '/signup',
   },
   {
     title: 'Pricing',

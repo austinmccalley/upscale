@@ -1,5 +1,6 @@
 import { supabase } from '../lib/initSupabase';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { sign, verify } from '../lib/jwt';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
@@ -29,23 +30,34 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     supabase.auth
-      .signIn({
-        email: data.email,
-        password: data.password,
-      })
+      .signUp(
+        {
+          email: data.email,
+          password: data.password,
+        },
+        {
+          data: {
+            plan: data.plan,
+            fName: data.firstName,
+            lName: data.lastName,
+          },
+        }
+      )
       .then(({ user, error, session }) => {
         if (error) {
           console.error(error);
           return;
         }
-        // Redirect to /profile
-        router.push('/profile');
+
+        if (user && !session) {
+          // We are successful at creating the user, waiting for email verification
+          setNextStep(true);
+        }
       })
       .catch((err) => {
         alert(err);
       });
   };
-
   useEffect(() => {
     try {
       const session = supabase.auth.session();
@@ -60,7 +72,7 @@ const Login = () => {
   return (
     <div className="h-screen justify-center flex w-full">
       <div className="w-3/5 pt-8">
-        <h1>Sign In</h1>
+        <h1>Sign Up</h1>
         <Link href="/">
           <h5 className="text-white text-md pt-3 hover:cursor-pointer underline">
             Home
@@ -110,7 +122,7 @@ const Login = () => {
                   </label>
                   <input
                     id="password"
-                    autoComplete="password"
+                    autoComplete="new-password"
                     type={'password'}
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     {...register('password', {
@@ -123,12 +135,75 @@ const Login = () => {
                     </p>
                   )}
                 </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="firstName"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    id="firstName"
+                    type={'text'}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    {...register('firstName', { required: true })}
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-xs italic">
+                      Please provide your first name
+                    </p>
+                  )}
+                </div>
+
+                <div className="mb-4">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="lastName"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    id="lastName"
+                    type={'test'}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    {...register('lastName', { required: true })}
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-xs italic">
+                      Please provide your last name
+                    </p>
+                  )}
+                </div>
+
+                <div className="mb-6">
+                  <label
+                    className="block text-white text-sm font-bold mb-2"
+                    htmlFor="plan"
+                  >
+                    Plan
+                  </label>
+                  <select
+                    {...register('plan', { required: true })}
+                    id="plan"
+                    className="w-full shadow border rounded leading-right py-2 px-3"
+                  >
+                    <option value={'basic'}>Basic</option>
+                    <option value={'premium'}>Premium</option>
+                  </select>
+                  {errors.plan && (
+                    <p className="text-red-500 text-xs italic">
+                      Please select a plan
+                    </p>
+                  )}
+                </div>
+
                 <div className="flex items-center justify-center">
                   <button
                     type="submit"
                     className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
-                    Sign In
+                    Sign Up
                   </button>
                 </div>
               </form>
