@@ -60,14 +60,14 @@ const Login = () => {
   return (
     <div className="h-screen justify-center flex w-full">
       <div className="w-3/5 pt-8">
-        <h1>Sign In</h1>
+        <h1>Log In</h1>
         <Link href="/">
-          <h5 className="text-white text-md pt-3 hover:cursor-pointer underline">
-            Home
+          <h5 className="text-white text-md hover:cursor-pointer">
+            {'<'} Home
           </h5>
         </Link>
-        <div className="flex items-center justify-center w-full h-full">
-          <div className="w-full max-w-sm md:w-auto">
+        <div className="flex items-center justify-center h-full w-3/4">
+          <div className="w-full">
             {nextStep ? (
               <div className="rounded shadow-md bg-[#242424] px-8 pt-6 pb-8">
                 <h2>Next Step</h2>
@@ -78,9 +78,9 @@ const Login = () => {
             ) : (
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-[#242424] shadow-md rounded px-8 pt-6 pb-8 mb-4"
+                className="bg-[#242424] shadow-md rounded px-14 pt-10 pb-4"
               >
-                <div className="mb-4">
+                <div className="mb-5">
                   <label
                     className="block text-white text-sm font-bold mb-2"
                     htmlFor="email"
@@ -101,7 +101,7 @@ const Login = () => {
                   )}
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-8">
                   <label
                     className="block text-white text-sm font-bold mb-2"
                     htmlFor="password"
@@ -123,12 +123,12 @@ const Login = () => {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center h-full">
                   <button
                     type="submit"
                     className="bg-sky-500 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
-                    Sign In
+                    Log In
                   </button>
                 </div>
               </form>
